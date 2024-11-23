@@ -1,11 +1,18 @@
-import React from 'react';
-import { Login as LoginComponent } from '../components';
+import React from 'react'
+import Template from '../components/Core/Auth/Template'
+import loginImg from "../assets/Images/login.webp"
 function Login() {
-    return ( 
-        <div className='py-8'>
-            <LoginComponent></LoginComponent>
+    return (
+        <div>
+            <Template
+                title="Welcome Back"
+                description1="Build skills for today, tomorrow, and beyond."
+                description2="Education to future-proof your career."
+                image={loginImg}
+                formType="login"
+            ></Template>
         </div>
-     );
+    )
 }
 
-export default Login;
+export default Login

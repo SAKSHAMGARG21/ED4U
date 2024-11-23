@@ -75,8 +75,50 @@ const getallUsersDetails= asyncHandler(async(req,res)=>{
     )
 })
 
+const getenrolledUserCourses= asyncHandler(async(req,res)=>{
+
+    const userId= req.user._id;
+
+    if (!userId){
+        throw new ApiError(404,"User not found");
+    }
+
+    const userDetails= await User.findById(userId)
+    .populate({
+        path: "courses",
+        populate:{
+            path: "courseContent",
+            populate:{
+                path: "subsection",
+            }
+        }
+    }).exec();
+
+    
+
+    if (!userDetails){
+        throw new ApiError(404,"User Details not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200,userDetails,"Successfully fetched User Enrolled Courses")
+    )
+
+})
+const updateDisplayPicture= asyncHandler(async(req,res)=>{
+
+})
+const instructorDashboard= asyncHandler(async(req,res)=>{
+
+})
+
+
+
 export {
     updateProfile,
     deleteAccount,
-    getallUsersDetails
+    getallUsersDetails,
+    getenrolledUserCourses,
+    updateDisplayPicture,
+    instructorDashboard
 }

@@ -14,7 +14,7 @@ const courcesSchema = new mongoose.Schema({
         ref: "User",
         required: true,
     },
-    whatYouWillLearn: {
+    whatWillYouLearn: {
         type: String,
         required:true,
     },
@@ -51,6 +51,13 @@ const courcesSchema = new mongoose.Schema({
             ref:"User",
         }
     ],
+    instructions: {
+		type: String,
+	},
+	status: {
+		type: String,
+		enum: ["Draft", "Published"],
+	},
 
 }, { timestamps: true });
 

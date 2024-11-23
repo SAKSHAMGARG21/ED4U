@@ -13,8 +13,8 @@ app.use(cors({
 }));
 
 // Configure middleware for parsing incoming JSON payloads with a limit of 16 KB
-app.use(express.json());
-// app.use(express.json({ limit: "10mb" }));
+// app.use(express.json());
+app.use(express.json({ limit: "16mb" }));
 
 // Configure middleware for parsing incoming URL-encoded payloads with a limit of 16 KB
 app.use(express.urlencoded({ extended: true, limit: "16mb" }));
@@ -44,7 +44,7 @@ app.use("/api/v1/comments", commentrouter);
 app.use("/api/v1/likes", likerouter);
 app.use("/api/v1/playlists", playlistrouter);
 app.use("/api/v1/category", categoryrouter);
-app.use("/api/v1/courses", coursesrouter)
+app.use("/api/v1/course", coursesrouter)
 app.use("/api/v1/payment", paymentrouter)
 app.use("/api/v1/profile", profilerouter)
 app.use("/api/v1/ratingandreview", ratingandreviewrouter)

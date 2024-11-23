@@ -62,7 +62,7 @@ const userSchema = new Schema({
     courses:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:"Courses",
+            ref:"Course",
         }
     ],
     courseProgress:[
@@ -76,10 +76,6 @@ const userSchema = new Schema({
     },
     resetPasswordExpires:{
         type:String,
-    },
-    verified:{
-        type:Boolean,
-        default:false,
     },
     active: {
         type: Boolean,

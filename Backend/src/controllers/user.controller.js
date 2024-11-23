@@ -8,14 +8,9 @@ import bcrypt from "bcrypt"
 import mongoose from "mongoose"
 import jwt from "jsonwebtoken";
 import OtpValidation from "../modules/Otp.model.js"
-// import { otpAuth } from "../middlewares/Otp.middleware.js"
-import dotenv from "dotenv"
 import mailSender from "../utils/MainSender.js"
 import { Profile } from "../modules/profile.model.js"
-
-dotenv.config({
-    path: ".env"
-})
+import { passwordUpdated } from "../mail/templates/passwordUpdateTemplate.js"
 
 // Function is to fetch all the users form db 
 const getallUsers = asyncHandler(async (req, res) => {
@@ -84,20 +79,20 @@ const regesterUser = asyncHandler(async (req, res) => {
     // check for  user creation
     // return res
 
-    /*
-    const user = req.body;
-    console.log("FullName :", user.fullName);
-    console.log("Email :", user.email);
-    console.log("UserName :", user.userName);
-    console.log("Password:", user.password);
-    res.send(user);
-    */
+
+    // const user = req.body;
+    // console.log("FullName :", user.fullName);
+    // console.log("Email :", user.email);
+    // console.log("UserName :", user.userName);
+    // console.log("Password:", user.password);
+    // res.send(user);
+
 
     // console.log(req.body);
-    const { fullName, email, userName, password, accountType } = req.body;
+    const { fullName, email, userName, password, accountType, otp } = req.body;
 
     if (
-        [fullName, email, userName, password, accountType].some((field) => field?.trim() === "")
+        [fullName, email, userName, password, accountType, otp].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
@@ -110,28 +105,28 @@ const regesterUser = asyncHandler(async (req, res) => {
         throw new ApiError(409, "User with username or email already exists");
     }
 
-    const avatarLocalPath = req.files?.avtar[0].path;
-    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const avatarLocalPath = req.files?.avtar[0].path;
+    // // const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
-    let coverImageLocalPath;
-    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
-        coverImageLocalPath = req.files.coverImage[0].path;
-    }
+    // let coverImageLocalPath;
+    // if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+    //     coverImageLocalPath = req.files.coverImage[0].path;
+    // }
 
-    if (!avatarLocalPath) {
-        throw new ApiError(400, "Avatar file is required");
-    }
+    // if (!avatarLocalPath) {
+    //     throw new ApiError(400, "Avatar file is required");
+    // }
 
-    const avtar = await uploadOnCloudinary(avatarLocalPath, process.env.CLOUDINARY_FOLDER_NAME);
+    // const avtar = await uploadOnCloudinary(avatarLocalPath, process.env.CLOUDINARY_FOLDER_NAME);
 
-    const coverImage = await uploadOnCloudinary(coverImageLocalPath, process.env.CLOUDINARY_FOLDER_NAME);
-    if (!avtar) {
-        throw new ApiError(400, "Cloudinary Avatar file is required")
-    }
+    // const coverImage = await uploadOnCloudinary(coverImageLocalPath, process.env.CLOUDINARY_FOLDER_NAME);
+    // if (!avtar) {
+    //     throw new ApiError(400, "Cloudinary Avatar file is required")
+    // }
 
-    const newotpDetails = await sendOtpVerificationEmail(email);
+    const verifiedOtp = await verifyEmailOtp(email, otp);
 
-    if (!newotpDetails) {
+    if (!verifiedOtp) {
         throw new ApiError(401, "Error User not verified");
     }
 
@@ -142,11 +137,15 @@ const regesterUser = asyncHandler(async (req, res) => {
         contactNumber: null
     })
 
+    let names = fullName.split(" ");
+    let firstName = names[0];
+    let lastname = names[1];
+
     const user = await User.create({
         userName: userName.toLowerCase(),
         fullName,
-        avtar: `https://api.dicebear.com/5.x/initials/svg?seed=${fullName} ${userName}`,
-        coverImage:"",
+        avtar: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastname}`,
+        coverImage: "",
         email,
         password,
         accountType,
@@ -161,13 +160,16 @@ const regesterUser = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Something went wrong while regestring the user");
     }
 
-    return res.status(201).json(
-        new ApiResponse(200, { user: createdUser, opt: newotpDetails }, "User registered successfully Verify Your OTP from your email")
+    return res.status(200).json(
+        new ApiResponse(200, { user: createdUser }, "User registered successfully Verify Your OTP from your email")
     )
 })
 
 // Function to handle OTP Verification 
-const sendOtpVerificationEmail = async (email) => {
+const sendOtpVerificationEmail = asyncHandler(async (req, res) => {
+
+    const { email } = req.body;
+
     const otp = Math.floor(1000 + Math.random() * 9000);
 
     // const saltRounds = 10;
@@ -183,13 +185,13 @@ const sendOtpVerificationEmail = async (email) => {
         throw new ApiError(404, "Error in saving otp details in db");
     }
 
-    return newOtpValidation;
-}
+    return res.status(200).json(
+        new ApiResponse(200, newOtpValidation, "OTP send Successfully")
+    )
+})
 
-const verifyEmailOtp = asyncHandler(async (req, res) => {
-
-    const { email, otp } = req.body;
-
+const verifyEmailOtp = async (email, otp) => {
+    // console.log(email, otp);
     if (!(email && otp)) {
         throw new ApiError(400, "Please provide both userId and otp");
     }
@@ -214,29 +216,13 @@ const verifyEmailOtp = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid code. Please check your Mail inbox");
     }
 
-    const createdUser = await User.findOneAndUpdate(
-        { email },
-        {
-            $set: {
-                verified: true
-            }
-        },
-        {
-            new: true
-        }
-    );
-
-    if (!createdUser) {
-        throw new ApiError(401, "User not found for otp verification")
-    }
-
     await OtpValidation.deleteMany({ email });
 
-    // return validOtp;
-    return res.status(200).json(
-        new ApiResponse(200, validOtp, "User Verified Successfully")
-    )
-})
+    return validOtp;
+    // return res.status(200).json(
+    //     new ApiResponse(200, validOtp, "User Verified Successfully")
+    // )
+}
 
 // resend OTP Verification
 const resendOtpVerificationEmail = asyncHandler(async (req, res) => {
@@ -278,9 +264,6 @@ const loginUser = asyncHandler(async (req, res) => {
     if (!user) {
         throw new ApiError(404, "User does not exist");
     }
-    if (!user.verified) {
-        throw new ApiError(404, "User not verified! Please verifiy your email again");
-    }
 
     const isPasswordValid = await user.isPasswordCorrect(password)
 
@@ -290,7 +273,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id);
 
-    const loggenInUser = await User.findById(user._id).select("-password -refreshToken");
+    const loggenInUser = await User.findById(user._id).select("-password -refreshToken").populate("additionalDetails");
 
     const option = {
         httpOnly: true,
@@ -300,12 +283,12 @@ const loginUser = asyncHandler(async (req, res) => {
     const option2 = {
         httpOnly: true,
         secure: true,
-        // maxAge: 300000
+        maxAge: 300000
     }
 
     return res.status(200)
         .cookie("accessToken", accessToken, option)
-        .cookie("refreshToken", refreshToken, option2)
+        .cookie("refreshToken", refreshToken, option)
         .json(
             new ApiResponse(
                 200,
@@ -330,9 +313,7 @@ const logoutUser = asyncHandler(async (req, res) => {
                 refreshToken: 1
             }
         },
-        {
-            new: true
-        }
+        { new: true }
     )
 
     // console.log("user:",req.user.refreshToken);
@@ -450,9 +431,16 @@ const resetPasswordSendMail = asyncHandler(async (req, res) => {
         }
     )
 
-    const url = `https://localhost:5000/forgot-password/${token}`;
+    if (!updatedUser) {
+        throw ApiError(401, "User not update in reset Password send Mail");
+    }
 
-    const resetPasslink = await mailSender(email, "Change Your Password keep remmember next time", `Password Reset Link: ${url}`);
+    const url = `http://localhost:5173/update-password/${token}`;
+
+    const mainbody = passwordUpdated(url,email,user.fullName);
+
+    // const resetPasslink = await mailSender(email, "Change Your Password keep remmember next time", `Password Reset Link: ${url}`);
+    const resetPasslink = await mailSender(email, "Change Your Password keep remmember next time", mainbody);
 
     return res.status(200).json(
         new ApiResponse(200, resetPasslink, "Email send successfully")
@@ -461,7 +449,8 @@ const resetPasswordSendMail = asyncHandler(async (req, res) => {
 })
 
 const resetPassword = asyncHandler(async (req, res) => {
-    const { password, token } = req.body;
+
+    const { password,token } = req.body;
 
     if (!(password || token)) {
         throw new ApiError(401, "Password required to change");
@@ -838,7 +827,8 @@ export {
     verifyEmailOtp,
     resendOtpVerificationEmail,
     resetPasswordSendMail,
-    resetPassword
+    resetPassword,
+    sendOtpVerificationEmail
 }
 
 

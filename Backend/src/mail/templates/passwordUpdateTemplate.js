@@ -1,4 +1,4 @@
-export const passwordUpdated = (email, name) => {
+export const passwordUpdated = (url,email, name) => {
     return `<!DOCTYPE html>
     <html>
     
@@ -56,11 +56,13 @@ export const passwordUpdated = (email, name) => {
     <body>
         <div class="container">
             <a href="https://Ed4U-edtech-project.vercel.app"><img class="logo"
-                    src="" alt="Ed4U Logo"></a>
+                    src="https://res.cloudinary.com/dc0cje1fm/image/upload/v1731066433/Ed4U/ygxzz3vinjk7eewclhtm.png" alt="Ed4U"></a>
             <div class="message">Password Update Confirmation</div>
             <div class="body">
                 <p>Hey ${name},</p>
                 <p>Your password has been successfully updated for the email <span class="highlight">${email}</span>.
+                </p>
+                <p> This is your link to change your password <span class="highlight">${url}</span>
                 </p>
                 <p>If you did not request this password change, please contact us immediately to secure your account.</p>
             </div>

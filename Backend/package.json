@@ -1,5 +1,5 @@
 {
-  "name": "videotube",
+  "name": "backend",
   "version": "1.0.0",
   "description": "To start this project :\r npm i\r nodemon src/index.js",
   "type": "module",
@@ -17,6 +17,7 @@
     "cloudinary": "^2.4.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dot-env": "^0.0.1",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",

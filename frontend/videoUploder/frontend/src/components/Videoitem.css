@@ -1,0 +1,6 @@
+.videobox img{
+    display: block;
+}
+.videobox:hover img{
+    display: none;
+}

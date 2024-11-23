@@ -8,7 +8,7 @@ const createCategory = asyncHandler(async (req, res) => {
     const { name, description } = req.body;
 
     if (!(name || description)) {
-        throw new ApiError(401, "All details are required");
+        throw new ApiError(404, "All details are required");
     }
 
     const newTag = await Category.create({
@@ -17,7 +17,7 @@ const createCategory = asyncHandler(async (req, res) => {
     });
 
     if (!newTag) {
-        throw new ApiError(401, "Error in creating Tag in DB");
+        throw new ApiError(404, "Error in creating Tag in DB");
     }
 
     return res.status(200).json(
@@ -33,48 +33,80 @@ const getAllCategory = asyncHandler(async (req, res) => {
 })
 
 const categoryPageDetails = asyncHandler(async (req, res) => {
-    const { courseId } = req.body;
+    const {categoryId} = req.body;
 
-    const selectedCourses = await Category.findById(courseId).populate("courses");
+    // console.log(categoryId);
+    const selectedCourses = await Category.findById(categoryId)
+        .populate({
+            path: "courses",
+            match: { status: "Published" }
+        });
 
     if (!selectedCourses) {
-        throw new ApiError(401, "Data not found");
+        throw new ApiError(404, "Data not found");
     }
 
-    const differentCategories = await Category.find(
+    const differentCourses = await Category.find(
         {
             _id: {
-                $ne: courseId
+                $ne: categoryId
             }
         }
-    ).populate("courses").exec();
+    ).populate({
+        path: "courses",
+        match: { status: "Published" },
+        // populate: {
+        //     path:"instructor"
+        // }
+        // populate:"ratingAndReviews"
+    }).exec();
 
-    if (!differentCategories) {
-        throw new ApiError(401, "Data not found for Different Categories");
+    if (!differentCourses) {
+        throw new ApiError(404, "Data not found for Different Categories");
     }
 
     // top courses
+    // const trendingCourses = await Course.aggregate([
+    //     {
+    //         $project: {
+    //             courseName: 1,
+    //             courseDescription:1,
+
+    //             studentsCount: {
+    //                 $size: "$studentsEnrolled"
+    //             }
+    //         }
+    //     },
+    //     { $sort: { studentsCount: -1 } }
+    // ])
+
     const trendingCourses = await Course.aggregate([
         {
-            $project: {
-                name: 1,
+            $match: {
+                status: "Published" // Filter for published courses
+            }
+        },
+        {
+            $addFields: {
                 studentsCount: {
                     $size: "$studentsEnrolled"
                 }
             }
         },
         { $sort: { studentsCount: -1 } }
-    ]);
+    ])
 
 
     return res.status(200).json(
-        200,
-        {
-            selectedCourses: selectedCourses,
-            differentCategories: differentCategories,
-            trendingCourses: trendingCourses
-        },
-        "Categories data fetched Successfully"
+        new ApiResponse(
+            200,
+            {
+                selectedCourses: selectedCourses,
+                differentCourses: differentCourses,
+                trendingCourses: trendingCourses
+            },
+            "Categories data fetched Successfully"
+        )
     )
 })
 

@@ -1,8 +1,7 @@
-# React + Vite
+## To start the backend and frontend concurrently
+"server": "cd server && npm run dev",
+"dev": "concurrently -n \"client,server\" -c \"bgBlue,bgYellow\" \"npm start\" \"npm run server\""
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## to start this project
+"server": "cd.. && cd Backend && npm run dev",
+"dev": "concurrently -n \"client,server\" -c \"bgBlue,bgYellow\" \"npm run dev2\" \"npm run server\""

@@ -67,8 +67,8 @@ export const courseEnrollmentEmail = (courseName, name) => {
     
     <body>
         <div class="container">
-            <a href="https://Ed4U-edtech-project.vercel.app"><img class="logo" src=""
-                    alt="Ed4U Logo"></a>
+            <a href="https://Ed4U-edtech-project.vercel.app"><img class="logo" src="https://res.cloudinary.com/dc0cje1fm/image/upload/v1731066433/Ed4U/ygxzz3vinjk7eewclhtm.png"
+                    alt="Ed4U"></a>
             <div class="message">Course Registration Confirmation</div>
             <div class="body">
                 <p>Dear ${name},</p>

@@ -15,6 +15,7 @@ const createSubSection = asyncHandler(async (req, res) => {
     }
 
     const videofile = req.file?.path;
+    console.log(videofile);
 
     const uploadedfileDetails = await uploadOnCloudinary(videofile, process.env.CLOUDINARY_FOLDER_NAME);
 
@@ -37,7 +38,7 @@ const createSubSection = asyncHandler(async (req, res) => {
             $push: {
                 subsection: newSubsection._id
             }
-        }, { new: true })
+        }, { new: true }).populate("subsection");
 
     if (!updateSeciontDetails) {
         throw new ApiError(400, "Error in updating Section data");
@@ -59,34 +60,33 @@ const upateSubSection = asyncHandler(async (req, res) => {
         throw new ApiError(401, "all fields are required")
     }
 
-    const videofile = req.files.videoFile;
+    const videofile = req.file?.path;
 
     const uploadedfileDetails = await uploadOnCloudinary(videofile, process.env.CLOUDINARY_FOLDER_NAME);
 
-    if (!uploadedfileDetails) {
-        throw new ApiError(400, "Error in uploading video file to cloudinary");
-    }
+    const duration = (uploadedfileDetails) ? `${convertSecondsToDuration(uploadedfileDetails.duration)}` : timeDuration;
+    const url = (uploadedfileDetails) ? uploadedfileDetails.secure_url : "";
 
-    const updateddSubsection = await Subsection.findByIdAndUpdate(
+    const updatedSubsection = await Subsection.findByIdAndUpdate(
         { _id: sectionId },
         {
             title,
-            timeDuration,
+            timeDuration:duration,
             description,
-            VideoUrl: uploadedfileDetails._id
+            VideoUrl: url
         },
         {
             new: true
         }
     )
 
-    if (!newSubsection) {
-        throw new ApiError(400, "Error in creating sub section in db");
+    if (!updatedSubsection) {
+        throw new ApiError(400, "Error in updateing sub section in db");
     }
 
     return res.status(200).json(
         new ApiResponse(200,
-            updateddSubsection,
+            updatedSubsection,
             "subsection updated successfully"
         )
     )
@@ -99,12 +99,17 @@ const deleteSubSection = asyncHandler(async (req, res) => {
 
     const deletedSubSection = await Subsection.findByIdAndDelete(subsectionId);
 
-    const updateSectionDetails = await Section.findByIdAndUpdate({ _id: sectionId }
-        , {
+    const updateSectionDetails = await Section.findByIdAndUpdate(
+        { _id: sectionId },
+        {
             $pull: {
                 subsection: subsectionId
             }
-        }, { new: true })
+        }, 
+        { 
+            new: true
+        }
+    )
 
     if (!updateSectionDetails) {
         throw new ApiError(400, "Error in updating Section data");

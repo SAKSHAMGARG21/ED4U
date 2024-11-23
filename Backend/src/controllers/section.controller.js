@@ -1,5 +1,6 @@
 import { Course } from "../modules/courses.model.js";
 import { Section } from "../modules/Section.model.js";
+import { Subsection } from "../modules/Subsection.model.js";
 import { ApiError } from "../utils/ApiErrors.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -24,31 +25,44 @@ const createSection = asyncHandler(async (req, res) => {
         {
             new: true
         }
-    )
+    ).populate({
+        path: "courseContent",
+        populate: {
+            path: "subsection"
+        }
+    })
 
     return res.status(200).json(
-        new ApiResponse(200, {createdSection:newSection, updatedSecion:updatedCourseDetails }, "Section created Successfully")
+        new ApiResponse(200, { createdSection: newSection, updatedCourseDetails: updatedCourseDetails }, "Section created Successfully")
     )
 
 
 })
 
 const updateSection = asyncHandler(async (req, res) => {
-    const { newSectionName, sectionId } = req.body;
+    const { SectionName, sectionId, courseId } = req.body;
 
-    if (!(newSectionName || sectionId)) {
+    if (!(SectionName || sectionId || courseId)) {
         throw new ApiError(401, "all fields are Required section name");
     }
 
     const updatedSection = await Section.findByIdAndUpdate(
         sectionId,
         {
-            sectionName: newSectionName,
+            sectionName: SectionName,
         },
         {
             new: true
         }
     );
+
+    const updatedCourse = await Course.findById(courseId)
+        .populate({
+            path: "courseContent",
+            populate: {
+                path: "subsection"
+            }
+        });
 
     if (!updatedSection) {
         throw new ApiError(401,
@@ -57,7 +71,7 @@ const updateSection = asyncHandler(async (req, res) => {
     }
 
     return res.status(200).json(
-        new ApiResponse(200, updatedSection, "Secton updated Successfully")
+        new ApiResponse(200, { updatedSection: updatedSection, updatedCourse: updatedCourse }, "Secton updated Successfully")
     )
 })
 
@@ -68,7 +82,11 @@ const deleteSection = asyncHandler(async (req, res) => {
         throw new ApiError(401, " section id required")
     }
 
-    const deletedsection = await Section.findByIdAndDelete(sectionId);
+    const section = await Section.findById(sectionId);
+    const Subsections = section.subsection;
+    for (const subsectionId in Subsections) {
+        await Subsection.findByIdAndDelete(subsectionId);
+    }
 
     const updatedCourseDetails = await Course.findByIdAndUpdate(
         courseId,
@@ -82,9 +100,18 @@ const deleteSection = asyncHandler(async (req, res) => {
         }
     )
 
+    if (!updatedCourseDetails) {
+        throw new ApiError(401, "Error in updation of Course in Deletion of Section route");
+    }
+
+    const deletedsection = await Section.findByIdAndDelete(sectionId);
+
+    if (!deletedsection) {
+        throw new ApiError(401, "Error in deletion of Section");
+    }
 
     return res.status(200).json(
-        new ApiResponse(200, {deletedSection:deletedsection, updatedSecion:updatedCourseDetails}, "Section deleted Successfully")
+        new ApiResponse(200, { deletedSection: deletedsection, updatedSecion: updatedCourseDetails }, "Section deleted Successfully")
     )
 })
 

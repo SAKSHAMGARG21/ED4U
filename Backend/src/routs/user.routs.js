@@ -13,10 +13,11 @@ import {
     resendOtpVerificationEmail,
     resetPassword,
     resetPasswordSendMail,
+    sendOtpVerificationEmail,
     updateAvtarImg,
     updateCoverImage,
     updateUser,
-    verifyEmailOtp
+    // verifyEmailOtp
 } from "../controllers/user.controller.js"
 import { upload } from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/Auth.middleware.js"
@@ -40,9 +41,11 @@ router.route("/regester").post(
     regesterUser
 )
 
+router.route("/sendotp").post(sendOtpVerificationEmail);
+
 // To Verify email address 
-router.route("/verifyemail")
-    .post(verifyEmailOtp);
+// router.route("/verifyemail")
+//     .post(verifyEmailOtp);
 
 // Resend email for otp
 router.route("/resendmail")

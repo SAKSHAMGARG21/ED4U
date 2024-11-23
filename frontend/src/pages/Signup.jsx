@@ -1,9 +1,16 @@
-import React from 'react';
-import { Signup as SignupComponent } from '../components';
+import React from 'react'
+import Template from '../components/Core/Auth/Template'
+import signupImg from "../assets/Images/signup.webp"
 function Signup() {
     return (
-        <SignupComponent />
-    );
+        <Template
+            title="Join the millions learning to code with Ed4U for free"
+            description1="Build skills for today, tomorrow, and beyond."
+            description2="Education to future-proof your career."
+            image={signupImg}
+            formType="signup"
+        />
+    )
 }
 
-export default Signup;
+export default Signup

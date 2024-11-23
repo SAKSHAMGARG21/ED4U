@@ -33,19 +33,20 @@ import { ApiError } from "../utils/ApiErrors.js";
 
 export const verifyJWT = asyncHandler(async (req, res, next) => {
     try {
-        let token;
-        if (req.cookies && req.cookies.accessToken) {
-            token = req.cookies.accessToken;
-        } else if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
-            token = req.headers.authorization.split(" ")[1];
-        }
+        // let token;
+        // if (req.body.token || req.cookies && req.cookies.accessToken) {
+        //     token = req.cookies.accessToken || req.body.token;
+        // } else if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
+        //     token = req.headers.authorization.split(" ")[1];
+        // }
 
-        // console.log("Token:", token);
+        const token = req.body.token || req.cookies.refreshToken || req.get("Authorization")?.replace("Bearer ", "");
+
         if (!token) {
             throw new ApiError(401, "Unauthorized request");
         }
 
-        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const decodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
         // console.log("DecodedToken :",decodedToken);
 
         if (!decodedToken || !decodedToken._id) {

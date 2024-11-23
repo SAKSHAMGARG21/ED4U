@@ -3,10 +3,9 @@ import { categoryPageDetails, createCategory, getAllCategory } from "../../contr
 import { isAdmin, verifyJWT } from "../../middlewares/Auth.middleware.js";
 
 const router=Router();
-router.use(verifyJWT);
 
 router.route("/createcategory").post(isAdmin,createCategory);
 router.route("/getallcategory").get(getAllCategory);
-router.route("/categorypagedetails").get(categoryPageDetails);
+router.route("/categorypagedetails").post(categoryPageDetails);
 
 export default router;
