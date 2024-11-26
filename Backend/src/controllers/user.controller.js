@@ -175,6 +175,7 @@ const sendOtpVerificationEmail = asyncHandler(async (req, res) => {
     // const saltRounds = 10;
 
     // const hashedOtp = await bcrypt.hash(otp.toString(), saltRounds);
+    console.log(otp);
 
     const newOtpValidation = await OtpValidation.create({
         email: email,

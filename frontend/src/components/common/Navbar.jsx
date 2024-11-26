@@ -18,7 +18,6 @@ const Navbar = () => {
     // console.log("Printing base url: ",process.env.REACT_APP_BASE_URL);
 
     const { token } = useSelector((state) => state.auth);
-    const { token2 } = useSelector((state)=> state.auth);
     // console.log("token in Navbar is", token)
     const { user } = useSelector((state) => state.profile);
     // console.log("User in Navbar is", user)

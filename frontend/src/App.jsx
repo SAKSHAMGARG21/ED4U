@@ -1,5 +1,3 @@
-
-
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home.jsx';
@@ -12,7 +10,6 @@ import UpdatePassword from './pages/updatePassword.jsx';
 import OpenRoute from './components/Core/Auth/OpenRoute.jsx';
 import PrivateRoute from './components/Core/Auth/PrivateRoute.jsx';
 import Error from './pages/Error.jsx';
-// import Profile from './pages/Profile.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import ResetPasswordComplete from './pages/ResetPasswordComplete.jsx';
 import MyProfile from './components/Core/Dashboard/MyProfile.jsx';
@@ -29,6 +26,10 @@ import CommingSoon from './pages/CommingSoon.jsx';
 import Catalog from './pages/Catalog.jsx';
 import CourseDetails from './pages/CourseDetails.jsx'
 import EnrolledCourses from './components/Core/Dashboard/EnrolledCourses.jsx';
+import ViewCourse from './pages/ViewCourse.jsx';
+import VideoDetails from './components/Core/ViewCourse/VideoDetails.jsx';
+
+
 function App() {
   const { user } = useSelector((state) => state.profile);
 
@@ -105,7 +106,17 @@ function App() {
 
         </Route>
 
-
+        <Route element={<PrivateRoute><ViewCourse /></PrivateRoute>}>
+          {
+            user?.accountType == ACCOUNT_TYPE.STUDENT && (
+              <>
+                <Route path='view-course/:courseId/section/:sectionId/sub-section/:subsectionId'
+                  element={<VideoDetails />} >
+                </Route>
+              </>
+            )
+          }
+        </Route>
 
         <Route path='*' element={
           // <Error />

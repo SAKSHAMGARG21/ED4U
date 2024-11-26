@@ -331,40 +331,48 @@ export const fetchCourseDetails = async (courseId) => {
     return result;
 }
 
-export const getFullCourseDetailsusersEnticated = async () => {
+export const getFullCourseDetails = async (courseId,token) => {
     const toastId = toast.loading("Loading...");
+    let result=null;
     try {
-        const res = await apiConnector(GET_FULL_COURSE_DETAILS_usersENTICATED);
+        const res = await apiConnector("POST",GET_FULL_COURSE_DETAILS_usersENTICATED,{courseId:courseId},token);
         console.log(res);
 
         if (!res.data.success) {
             toast.error(res.data.message);
         }
 
-    } catch (error) {
-        console.log(" Error Api...........", error);
-        toast.error("Could not fetch ");
-    }
+        result=res.data.data;
+        console.log(result);
 
+    } catch (error) {
+        console.log("fetch full course Details Api Error...........", error);
+        toast.error("Could not fetch full course Details");
+    }
     toast.dismiss((toastId));
+    return result;
 }
-export const lecturecompletion = async () => {
+
+export const markLectureCompleted= async (data,token)=>{
     const toastId = toast.loading("Loading...");
+    let result=null;
     try {
-        const res = await apiConnector(LECTURE_COMPLETION_API);
+
+        const res= await apiConnector("PATCH",LECTURE_COMPLETION_API,data,token);
         console.log(res);
 
-        if (!res.data.success) {
+        if (!res.data.success){
             toast.error(res.data.message);
         }
 
-
+        result= res.data.data;
     } catch (error) {
-        console.log(" Error Api...........", error);
-        toast.error("Could not fetch ");
+        console.log("make video Completed Api Error...........", error);
+        toast.error("Could not make video Completed");
     }
+    toast.dismiss(toastId);
+    return result;
 
-    toast.dismiss((toastId));
 }
 
 export const getCatelogPageDetails = async (categoryId) => {
@@ -386,22 +394,24 @@ export const getCatelogPageDetails = async (categoryId) => {
         toast.error("Could not fetch catelog Details data");
     }
 
-
     toast.dismiss(toastId);
     return result;
 
 }
 
 
-export const createRating = async () => {
+export const createRating = async (courseId,token) => {
     const toastId = toast.loading("Loading...");
+    let result= null;
     try {
-        const res = await apiConnector(CREATE_RATING_API);
+        const res = await apiConnector("POST",CREATE_RATING_API,{courseId:courseId},token);
         console.log(res);
 
         if (!res.data.success) {
             toast.error(res.data.message);
         }
+
+        result= res.data.data;
 
     } catch (error) {
         console.log("Create Rating Api Error...........", error);
@@ -409,6 +419,7 @@ export const createRating = async () => {
     }
 
     toast.dismiss((toastId));
+    return result;
 }
 
 

@@ -1,5 +1,6 @@
 import { Category } from "../modules/category.model.js";
 import { Course } from "../modules/courses.model.js";
+import { CourseProgress } from "../modules/coursesProgress.model.js";
 import { Section } from "../modules/Section.model.js";
 import { Subsection } from "../modules/Subsection.model.js";
 import { User } from "../modules/user.models.js";
@@ -334,6 +335,59 @@ const deleteCourse = asyncHandler(async (req, res) => {
     )
 })
 
+const getCourseFullDetails=asyncHandler(async(req,res)=>{
+    const {courseId}= req.body;
+    const userId= req.user._id;
+
+    const course= await Course.findById(courseId)
+    .populate({
+        path:"instructor",
+        populate:{
+            path:"additionalDetails"
+        }
+    }).populate("category")
+    // .populate("ratingAndReview")
+    .populate({
+        path:"courseContent",
+        populate:{
+            path:"subsection",
+        }
+    }).exec();
+
+    const courseProgresscount= await CourseProgress.findOne({
+        courseId:courseId,
+        userId:userId
+    })
+
+    // if (!courseProgresscount){
+    //     throw new ApiError(404,"CourseProgress not found");
+    // }
+
+    console.log("courseProgresscount ->",courseProgresscount)
+
+    let totalDurationInSeconds = 0;
+    course.courseContent.forEach((content) => {
+      content.subsection.forEach((subsec) => {
+        const timeDurationInSeconds = parseInt(subsec.timeDuration)
+        totalDurationInSeconds += timeDurationInSeconds
+      })
+    })
+
+    const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
+
+    // console.log("total Duration in seconds ->",totalDuration);
+
+    return res.status(200).json(
+        new ApiResponse(200,
+        {
+            totalDuration:totalDuration,
+            course:course,
+            competedVideos:courseProgresscount?.completedVideos ? courseProgresscount?.completedVideos :[]},
+            "Full courseDetails fetched successfully"
+        )
+    )
+})
+
 export {
     createCourse,
     getAllCourses,
@@ -341,4 +395,5 @@ export {
     updateCourseDetails,
     getInstructorCourses,
     deleteCourse,
+    getCourseFullDetails
 }

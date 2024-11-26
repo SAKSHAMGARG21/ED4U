@@ -40,7 +40,7 @@ export const getUserEnrolledCourses =async (token) => {
 
     let result=null;
     try {
-        const res= await apiConnector("POST",GET_USER_ENROLLED_COURSES_API,{},token);
+        const res= await apiConnector("GET",GET_USER_ENROLLED_COURSES_API,{},token);
         console.log(res);
 
         if (!res.data.success){

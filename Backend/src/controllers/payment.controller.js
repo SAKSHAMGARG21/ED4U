@@ -66,14 +66,14 @@ const capturePayment = asyncHandler(async (req, res) => {
 
 // verify Signature of Razorpay and server
 const verifySignature = asyncHandler(async (req, res) => {
-    console.log("request in paymentVerify ->", req.body);
+    // console.log("request in paymentVerify ->", req.body);
 
     const razorpay_order_id = req.body?.razorpay_order_id;
     const razorpay_payment_id = req.body?.razorpay_payment_id;
     const razorpay_signature = req.body?.razorpay_signature;
     const courses = req.body?.courses;
-    const userId = req.user._id;
-
+    const userId = req.user?._id;
+    console.log(courses);
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !courses || !userId) {
         throw new ApiError(404, "Payment Failed");
     }
@@ -81,7 +81,7 @@ const verifySignature = asyncHandler(async (req, res) => {
     const body = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSignature = crypto.Hmac("sha256", process.env.RAZORPAY_SECRET).update(body.toString()).digest("hex");
 
-    console.log(expectedSignature+" "+razorpay_signature);
+    // console.log(expectedSignature+" "+razorpay_signature);
     if (expectedSignature === razorpay_signature) {
         let enrolledCourse; // Declare outside the loop
         let enrolledStudent; // Declare outside the loop
@@ -102,7 +102,7 @@ const verifySignature = asyncHandler(async (req, res) => {
             }
 
             courseProgressdetails = await CourseProgress.create({
-                courseID: course,
+                courseId: course,
                 userId: userId,
                 completedVideos: [],
             })

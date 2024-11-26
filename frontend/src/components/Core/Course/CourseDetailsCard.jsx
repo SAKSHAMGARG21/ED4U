@@ -58,7 +58,6 @@ const CourseDetailsCard = ({ course, setConfirmationModal, handleBuyCourse }) =>
                 </div>
                 <div className='flex flex-col gap-y-6'>
 
-
                     <button className='EdButton'
                         onClick={
                             user && user.accountType === ACCOUNT_TYPE.INSTRUCTOR ?
@@ -69,7 +68,7 @@ const CourseDetailsCard = ({ course, setConfirmationModal, handleBuyCourse }) =>
                         }
                     >
                         {
-                            user && course?.studentsEnrolled.includes(user?._id) || user.accountType === ACCOUNT_TYPE.INSTRUCTOR ? "Go to Course " : "Buy Now"
+                            user && course?.studentsEnrolled.includes(user?._id) ? "Go to Course " : "Buy Now"
                         }
                     </button>
 

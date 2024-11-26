@@ -38,18 +38,19 @@ import profilerouter from "./routs/profile.routs.js"
 import ratingandreviewrouter from "./routs/ratingAndReview.routs.js"
 import sectionrouter from "./routs/CoursesRoutes/section.routs.js"
 import subsectionrouter from "./routs/CoursesRoutes/subSection.routs.js"
+
 app.use("/api/v1/users", userrouter); // Mount the user routes at the "/api/v1/users" endpoint
 app.use("/api/v1/videos", videorouter);
 app.use("/api/v1/comments", commentrouter);
 app.use("/api/v1/likes", likerouter);
 app.use("/api/v1/playlists", playlistrouter);
 app.use("/api/v1/category", categoryrouter);
-app.use("/api/v1/course", coursesrouter)
-app.use("/api/v1/payment", paymentrouter)
-app.use("/api/v1/profile", profilerouter)
-app.use("/api/v1/ratingandreview", ratingandreviewrouter)
-app.use("/api/v1/section", sectionrouter)
-app.use("/api/v1/subsection", subsectionrouter)
+app.use("/api/v1/course", coursesrouter);
+app.use("/api/v1/payment", paymentrouter);
+app.use("/api/v1/profile", profilerouter);
+app.use("/api/v1/ratingandreview", ratingandreviewrouter);
+app.use("/api/v1/section", sectionrouter);
+app.use("/api/v1/subsection", subsectionrouter);
 // https://localhost:8000/api/v1/users/
 
 // Export the Express.js application instance for use in other parts of the application

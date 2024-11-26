@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import { studentEndpoints } from "../apis";
 import { apiConnector } from "../apiconnector";
-import Ed4u_logo from "../../assets/Logo/Ed4u_logo.png"
+import Ed4u_logo2 from "../../assets/Logo/Ed4u_logo-withbg.png"
 import { conf } from "../../utils/constants";
 import { resetCart } from "../../slices/cartSlice";
 
@@ -53,7 +53,7 @@ export const coursePayment = async (token, courses, userDetails, navigate, dispa
             order_id: orderResponse.data.data.id,
             name: "Ed4U",
             description: "Thank You for Purchasing the Course",
-            image: Ed4u_logo,
+            image: Ed4u_logo2,
             prefill: {
                 name: `${userDetails.fullName}`,
                 email: userDetails.email

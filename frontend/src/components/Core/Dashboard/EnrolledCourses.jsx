@@ -14,7 +14,7 @@ const EnrolledCourses = () => {
     const getEnrolledCourses = async() => {
         try{
             const response = await getUserEnrolledCourses(token);
-            console.log(response);
+            // console.log(response);
             setEnrolledCourses(response);
         }
         catch(error) {
@@ -50,6 +50,7 @@ const EnrolledCourses = () => {
         {/* Course Names */}
         {enrolledCourses.map((course, i, arr) => (
           <div
+
             className={`flex items-center border border-richblack-700 ${
               i === arr.length - 1 ? "rounded-b-lg" : "rounded-none"
             }`}
@@ -71,17 +72,17 @@ const EnrolledCourses = () => {
               <div className="flex max-w-xs flex-col gap-2">
                 <p className="font-semibold">{course.courseName}</p>
                 <p className="text-xs text-richblack-300">
-                  {course.description.length > 50
+                  {course.courseDescription.length > 50
                     ? `${course.description.slice(0, 50)}...`
-                    : course.description}
+                    : course.courseDescription}
                 </p>
               </div>
             </div>
-            <div className="w-1/4 px-2 py-3">{course?.totalDuration}</div>
+            <div className="w-1/4 px-2 py-3">{course?.timeDuration}</div>
             <div className="flex w-1/5 flex-col gap-2 px-2 py-3">
-              <p>Progress: {course.progressPercentage || 0}%</p>
+              <p>Progress: {course.courseProgressPercentage || 0}%</p>
               <ProgressBar
-                completed={course.progressPercentage || 0}
+                completed={course.couserProgressPercentage || 0}
                 height="8px"
                 isLabelVisible={false}
               />

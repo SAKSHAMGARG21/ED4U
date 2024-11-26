@@ -1,14 +1,13 @@
 
 import { CourseProgress } from "../modules/coursesProgress.model.js";
 import { Subsection } from "../modules/Subsection.model.js";
-import { ApiError } from "../utils/ApiErrors";
-import { ApiResponse } from "../utils/ApiResponse";
+import { ApiError } from "../utils/ApiErrors.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const updateCourseProgress = asyncHandler(async (req, res) => {
     const { courseId, subSectionId } = req.body;
     const userId = req.user._id;
-
 
     const subSection = await Subsection.findById(subSectionId);
 
@@ -17,9 +16,10 @@ export const updateCourseProgress = asyncHandler(async (req, res) => {
     }
 
     const courseProgress = await CourseProgress.findOne({
-        courseID: courseId,
+        courseId: courseId,
         userId: userId
     })
+    console.log(courseProgress);
 
     if (!courseProgress) {
         throw new ApiError("Course Progress does not exist")
