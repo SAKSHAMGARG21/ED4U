@@ -51,6 +51,9 @@ app.use("/api/v1/profile", profilerouter);
 app.use("/api/v1/ratingandreview", ratingandreviewrouter);
 app.use("/api/v1/section", sectionrouter);
 app.use("/api/v1/subsection", subsectionrouter);
+app.get("/home",(req,res)=>{
+    res.send("Welcome to home page backend is running");
+})
 // https://localhost:8000/api/v1/users/
 
 // Export the Express.js application instance for use in other parts of the application
