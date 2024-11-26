@@ -1,8 +1,0 @@
-.msgbox{
-    background-color: rgb(255, 255, 255);
-    position: fixed;
-    right: -250px;
-    z-index: 6;
-    top: .5rem;
-    transition: right  0.2s ease-in-out; 
-}
