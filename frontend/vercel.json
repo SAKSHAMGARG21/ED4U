@@ -1,0 +1,17 @@
+{
+    "installCommands":"npm install",
+    "version":2,
+    "builds":[
+        {
+            "src":"index.js",
+            "use":"@versel/node"
+        },
+        {
+            "src":"src/**/*",
+            "use":"@versel/static"
+        }
+    ],
+    "routes":[
+        { "src":"/(.*)","dest":"/" }
+    ]
+}
