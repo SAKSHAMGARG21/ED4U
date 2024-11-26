@@ -182,6 +182,8 @@ const sendOtpVerificationEmail = asyncHandler(async (req, res) => {
         otp: otp,
     });
 
+    // console.log(newOtpValidation);
+
     if (!newOtpValidation) {
         throw new ApiError(404, "Error in saving otp details in db");
     }
@@ -197,7 +199,7 @@ const verifyEmailOtp = async (email, otp) => {
         throw new ApiError(400, "Please provide both userId and otp");
     }
 
-    const UserOtp = await OtpValidation.find({ email });
+    const UserOtp = await OtpValidation.findOne({ email });
 
     if (!UserOtp) {
         throw new ApiError(400, "Account dose not exist or has been verified already.Please sign up or login first");
@@ -206,6 +208,7 @@ const verifyEmailOtp = async (email, otp) => {
     const { expiresAt } = UserOtp[0];
     const dbOtp = UserOtp[0].otp;
 
+    console.log(expiresAt," ",Date.now());
     if (expiresAt < Date.now()) {
         await OtpValidation.deleteMany({ email });
         throw new ApiError(400, "Code has expired. Please request agaain");
@@ -278,6 +281,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const option = {
         httpOnly: true,
+        sameSite:"none",
         secure: true,
         // maxAge: 60000
     }
@@ -321,6 +325,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 
     const options = {
         httpOnly: true,
+        sameSite:"none",
         secure: true
     }
 
@@ -359,11 +364,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
         const option = {
             httpOnly: true,
+            sameSite:"none",
             secure: true,
             // maxAge: 60000
         }
         const option2 = {
             httpOnly: true,
+            sameSite:"none",
             secure: true,
             // maxAge: 300000
         }
@@ -372,7 +379,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         // console.log(refreshToken);
         return res.status(200)
             .cookie("accessToken", accessToken, option)
-            .cookie("refreshToken", refreshToken, option2)
+            .cookie("refreshToken", refreshToken, option)
             .json(new ApiResponse(
                 200,
                 { user: user, accessToken: accessToken, newrefreshToken: refreshToken },
