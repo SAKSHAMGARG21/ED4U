@@ -126,7 +126,7 @@ const getenrolledUserCourses = asyncHandler(async (req, res) => {
 
 
     return res.status(200).json(
-        new ApiResponse(200,  user.courses, "Successfully fetched User Enrolled Courses")
+        new ApiResponse(200, user.courses, "Successfully fetched User Enrolled Courses")
     )
 
 })

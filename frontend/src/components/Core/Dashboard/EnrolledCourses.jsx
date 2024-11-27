@@ -14,7 +14,7 @@ const EnrolledCourses = () => {
   const getEnrolledCourses = async () => {
     try {
       const response = await getUserEnrolledCourses(token);
-      console.log(response);
+      // console.log(response);
       setEnrolledCourses(response);
     }
     catch (error) {
@@ -25,6 +25,8 @@ const EnrolledCourses = () => {
   useEffect(() => {
     getEnrolledCourses();
   }, []);
+
+  
 
 
   return (
@@ -81,9 +83,9 @@ const EnrolledCourses = () => {
               </div>
               <div className="w-1/4 px-2 py-3">{course?.timeDuration}</div>
               <div className="flex w-1/5 flex-col gap-2 px-2 py-3">
-                <p>Progress: {course.courseProgressPercentage || 0}%</p>
+                <p>Progress: {course.courseProgressPrecentage || 0}%</p>
                 <ProgressBar
-                  completed={course.couserProgressPercentage || 0}
+                  completed={course.courseProgressPrecentage || 0}
                   height="8px"
                   isLabelVisible={false}
                 />
