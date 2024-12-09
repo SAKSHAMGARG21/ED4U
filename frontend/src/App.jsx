@@ -105,7 +105,6 @@ function App() {
           }
 
         </Route>
-
         <Route element={<PrivateRoute><ViewCourse /></PrivateRoute>}>
           {
             user?.accountType == ACCOUNT_TYPE.STUDENT && (
