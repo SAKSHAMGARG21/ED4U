@@ -49,9 +49,9 @@ function UpdatePassword() {
                         Choose new password
                     </h1>
                     <p className="my-4 text-[1.125rem] leading-[1.625rem] text-richblack-100">
-                        Almost done. Enter your new password and youre all set.
+                        Almost done. Enter your new password and your are all set.
                     </p>
-                    {error && (<div className='text-pink-400 text-lg font-bold p-2 bg-pink-100 '>
+                    {error && (<div className='text-pink-400 text-lg font-medium p-2 bg-pink-100 '>
                         Password not match try again Enter
                     </div>)}
                     <form onSubmit={handleOnSubmit}>

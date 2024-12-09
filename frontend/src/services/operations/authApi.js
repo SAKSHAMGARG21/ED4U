@@ -5,7 +5,7 @@ import { apiConnector } from "../apiconnector";
 import { setUser } from "../../slices/profileSlice";
 import axios from "axios";
 
-export const sendOtp = (email, nevigate) => {
+export const sendOtp = (email, navigate) => {
     return async (dispatch) => {
         const tostId = toast.loading("Loading...")
         dispatch(setLoding(true));
@@ -17,7 +17,7 @@ export const sendOtp = (email, nevigate) => {
                 toast.error("Failed to send OTP");
             }
             toast.success("OTP send Successfully");
-            nevigate("/verify-email");
+            navigate("/verify-email");
         } catch (error) {
             console.log("Send otp Api error ....", error);
             toast.error("Could not Send OTP");

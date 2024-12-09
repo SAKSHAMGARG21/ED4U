@@ -11,6 +11,11 @@ import OtpValidation from "../modules/Otp.model.js"
 import mailSender from "../utils/MainSender.js"
 import { Profile } from "../modules/profile.model.js"
 import { passwordUpdated } from "../mail/templates/passwordUpdateTemplate.js"
+import dotenv from "dotenv";
+
+dotenv.config({
+    path:'.env',
+})
 
 // Function is to fetch all the users form db 
 const getallUsers = asyncHandler(async (req, res) => {
@@ -200,15 +205,16 @@ const verifyEmailOtp = async (email, otp) => {
     }
 
     const UserOtp = await OtpValidation.findOne({ email });
+    // console.log(UserOtp);
 
     if (!UserOtp) {
         throw new ApiError(400, "Account dose not exist or has been verified already.Please sign up or login first");
     }
 
-    const { expiresAt } = UserOtp[0];
-    const dbOtp = UserOtp[0].otp;
+    const { expiresAt } = UserOtp;
+    const dbOtp = UserOtp.otp;
 
-    console.log(expiresAt," ",Date.now());
+    // console.log(expiresAt, " ", Date.now());
     if (expiresAt < Date.now()) {
         await OtpValidation.deleteMany({ email });
         throw new ApiError(400, "Code has expired. Please request agaain");
@@ -257,7 +263,13 @@ const loginUser = asyncHandler(async (req, res) => {
     // access or refresh token
     // send cookies
 
-    const { userName, email, password } = req.body;
+    const { email, password } = req.body;
+
+    let userName;
+    if (!email.includes("@gmail.com")){
+        userName=email;
+    }
+    // console.log(userName);
 
     if (!(userName || email)) {
         throw new ApiError(400, "username or email is required");
@@ -281,7 +293,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const option = {
         httpOnly: true,
-        sameSite:"none",
+        sameSite: "none",
         secure: true,
         // maxAge: 60000
     }
@@ -325,7 +337,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 
     const options = {
         httpOnly: true,
-        sameSite:"none",
+        sameSite: "none",
         secure: true
     }
 
@@ -364,13 +376,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
         const option = {
             httpOnly: true,
-            sameSite:"none",
+            sameSite: "none",
             secure: true,
             // maxAge: 60000
         }
         const option2 = {
             httpOnly: true,
-            sameSite:"none",
+            sameSite: "none",
             secure: true,
             // maxAge: 300000
         }
@@ -443,9 +455,9 @@ const resetPasswordSendMail = asyncHandler(async (req, res) => {
         throw ApiError(401, "User not update in reset Password send Mail");
     }
 
-    const url = `http://localhost:5173/update-password/${token}`;
+    const url = `${process.env.CORS_ORIGIN}/update-password/${token}`;
 
-    const mainbody = passwordUpdated(url,email,user.fullName);
+    const mainbody = passwordUpdated(url, email, user.fullName);
 
     // const resetPasslink = await mailSender(email, "Change Your Password keep remmember next time", `Password Reset Link: ${url}`);
     const resetPasslink = await mailSender(email, "Change Your Password keep remmember next time", mainbody);
@@ -458,7 +470,7 @@ const resetPasswordSendMail = asyncHandler(async (req, res) => {
 
 const resetPassword = asyncHandler(async (req, res) => {
 
-    const { password,token } = req.body;
+    const { password, token } = req.body;
 
     if (!(password || token)) {
         throw new ApiError(401, "Password required to change");

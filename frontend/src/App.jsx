@@ -70,7 +70,7 @@ function App() {
         } />
         <Route path="resetcomplete" element={
           <OpenRoute>
-            <ResetPasswordComplete email={"saksham@gamil.com"} />
+            <ResetPasswordComplete email={"sak*****@gamil.com"} />
           </OpenRoute>
         } />
         <Route path="about" element={
