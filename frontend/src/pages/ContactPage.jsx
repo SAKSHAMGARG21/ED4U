@@ -14,8 +14,8 @@ const ContactPage = () => {
         },
         {
             title:"Visit us",
-            desc:"Come and say hello at our office HQ.",
-            address:"Akshya Nagar 1st Block 1st Cross, Rammurthy nagar, Bangalore-560016"
+            desc:"Come and say hello at our office.",
+            address:"Chitkara University Rajpura, Punjab"
         },
         {
             title:"Call us",
