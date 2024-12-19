@@ -10,7 +10,7 @@ const ContactPage = () => {
         {
             title:"Chat on us",
             desc:"Our friendly team is here to help.",
-            address:"info@studynotion.com"
+            address:"info@Ed4U.com"
         },
         {
             title:"Visit us",
