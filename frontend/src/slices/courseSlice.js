@@ -25,8 +25,8 @@ const courseSlice = createSlice({
         },
         resetCourse(state, action) {
             state.step = 1,
-                state.course = null,
-                state.editCourse = false
+            state.course = null,
+            state.editCourse = false
         }
     }
 })

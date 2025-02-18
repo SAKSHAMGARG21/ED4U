@@ -58,7 +58,6 @@ export const getAllCourses = async () => {
             toast.error(res.data.message);
         }
 
-
     } catch (error) {
         console.log("Fetch All Courses  Api Error...........", error);
         toast.error("Could not fetch all Course");

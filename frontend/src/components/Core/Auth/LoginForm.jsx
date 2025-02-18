@@ -24,7 +24,6 @@ function LoginForm() {
     }))
   }
   
-  axios.defaults.withCredentials=true
   const handleOnSubmit = (e) => {
     e.preventDefault()
     dispatch(login(email, password, navigate))

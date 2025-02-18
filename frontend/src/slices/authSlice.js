@@ -24,4 +24,4 @@ const authSilce = createSlice({
 
 export const {setSignupData,setToken,setLoding} =  authSilce.actions;
 
-export  default authSilce.reducer;
+export default authSilce.reducer;

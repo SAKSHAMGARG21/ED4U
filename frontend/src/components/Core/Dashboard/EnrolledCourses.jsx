@@ -10,7 +10,6 @@ const EnrolledCourses = () => {
   const navigate = useNavigate()
   const [enrolledCourses, setEnrolledCourses] = useState(null);
 
-
   const getEnrolledCourses = async () => {
     try {
       const response = await getUserEnrolledCourses(token);
@@ -25,8 +24,6 @@ const EnrolledCourses = () => {
   useEffect(() => {
     getEnrolledCourses();
   }, []);
-
-  
 
 
   return (

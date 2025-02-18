@@ -39,7 +39,7 @@ router.route("/regester").post(
         }
     ]),
     regesterUser
-)
+);
 
 router.route("/sendotp").post(sendOtpVerificationEmail);
 

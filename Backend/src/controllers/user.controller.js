@@ -204,18 +204,18 @@ const verifyEmailOtp = async (email, otp) => {
         throw new ApiError(400, "Please provide both userId and otp");
     }
 
-    const UserOtp = await OtpValidation.findOne({ email });
-    // console.log(UserOtp);
+    const UserOtp = await OtpValidation.findOne({ email }).sort({createdAt:-1});
+    console.log(UserOtp);
 
     if (!UserOtp) {
         throw new ApiError(400, "Account dose not exist or has been verified already.Please sign up or login first");
     }
 
-    const { expiresAt } = UserOtp;
+    const time = UserOtp.expiresAt.toString();
     const dbOtp = UserOtp.otp;
 
-    // console.log(expiresAt, " ", Date.now());
-    if (expiresAt < Date.now()) {
+    // console.log(time, " ", Date.now());
+    if (time < Date.now()) {
         await OtpValidation.deleteMany({ email });
         throw new ApiError(400, "Code has expired. Please request agaain");
     }
@@ -292,10 +292,10 @@ const loginUser = asyncHandler(async (req, res) => {
     const loggenInUser = await User.findById(user._id).select("-password -refreshToken").populate("additionalDetails");
 
     const option = {
-        httpOnly: true,
+        httpOnly: true, 
         sameSite: "none",
         secure: true,
-        // maxAge: 60000
+        maxAge: 60000
     }
     const option2 = {
         httpOnly: true,
@@ -305,7 +305,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     return res.status(200)
         .cookie("accessToken", accessToken, option)
-        .cookie("refreshToken", refreshToken, option)
+        .cookie("refreshToken", refreshToken, option2)
         .json(
             new ApiResponse(
                 200,

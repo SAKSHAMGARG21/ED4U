@@ -54,15 +54,12 @@ export const signUp = (userName, fullName, email, password, accountType, otp, na
 
 
 export const login = (email, password, navigate) => {
-    
-    axios.defaults.withCredentials = true;
-
     return async (dispatch) => {
         const tostId = toast.loading("Loading...");
         dispatch(setLoding(true));
         try {
 
-            const response = await apiConnector("POST", endpoints.LOGIN_API, { email, password });
+            const response = await axios.post(endpoints.LOGIN_API, { email, password });
             if (!response.data.success) {
                 toast.error("Failed to login");
             }

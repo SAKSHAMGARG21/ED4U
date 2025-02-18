@@ -33,7 +33,7 @@ async function sendVerificationEmail(email, otp) {
         const mailResponse = await mailSender(email, "Verification Email from Ed4U", body);
         // console.log("Email sent successfully: ", mailResponse);
     } catch (error) {
-        console.log("Error occured while sending mails: ", mailResponse);
+        console.log("Error occured while sending mails: ", error);
         throw error;
     }
 }

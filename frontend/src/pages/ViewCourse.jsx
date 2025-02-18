@@ -30,9 +30,7 @@ function ViewCourse() {
             })
 
             dispatch(setTotalNoOfLectures(lectures));
-
         }
-
         setCourseSpecificDetails();
 
     }, [courseId]);

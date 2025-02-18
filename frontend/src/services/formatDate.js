@@ -14,6 +14,6 @@ export const formatDate = (dateString) => {
   return `${formattedDate} | ${formattedTime}`
 }
 
-// const inputDate = "2023-10-05T14:30:00Z"; // This represents October 5, 2023, at 2:30 PM UTC
-// const output = formatDate(inputDate);
-// console.log(output);
+const inputDate = "2023-10-05T14:30:00Z"; // This represents October 5, 2023, at 2:30 PM UTC
+const output = formatDate(inputDate);
+console.log(output);
