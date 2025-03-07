@@ -19,7 +19,7 @@ export const updateCourseProgress = asyncHandler(async (req, res) => {
         courseId: courseId,
         userId: userId
     })
-    console.log(courseProgress);
+    // console.log(courseProgress);
 
     if (!courseProgress) {
         throw new ApiError("Course Progress does not exist")

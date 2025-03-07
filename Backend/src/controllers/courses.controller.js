@@ -363,7 +363,7 @@ const getCourseFullDetails=asyncHandler(async(req,res)=>{
     //     throw new ApiError(404,"CourseProgress not found");
     // }
 
-    console.log("courseProgresscount ->",courseProgresscount)
+    // console.log("courseProgresscount ->",courseProgresscount)
 
     let totalDurationInSeconds = 0;
     course.courseContent.forEach((content) => {
