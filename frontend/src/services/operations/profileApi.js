@@ -9,7 +9,7 @@ const {
     GET_INSTRUCTOR_DATA_API
 } = profileEndpoints
 
-const { CONTACT_US_API } = contactusEndpoint;
+// const { CONTACT_US_API } = contactusEndpoint;
 
 
 export const getUserDetails =async (token, navigate) => {
