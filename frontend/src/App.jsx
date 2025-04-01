@@ -10,6 +10,7 @@ import UpdatePassword from './pages/updatePassword.jsx';
 import OpenRoute from './components/Core/Auth/OpenRoute.jsx';
 import PrivateRoute from './components/Core/Auth/PrivateRoute.jsx';
 import Error from './pages/Error.jsx';
+import Cart from './components/Core/Cart';
 import ContactPage from './pages/ContactPage.jsx';
 import ResetPasswordComplete from './pages/ResetPasswordComplete.jsx';
 import MyProfile from './components/Core/Dashboard/MyProfile.jsx';
@@ -33,7 +34,7 @@ import toast from 'react-hot-toast';
 
 function App() {
   const { user } = useSelector((state) => state.profile);
-  const [toastStatus,settoastStatus]= useState(true); 
+  const [toastStatus,settoastStatus]= useState(false); 
   axios.defaults.withCredentials = true;
   if (toastStatus) {
     toast.custom((t) => (
@@ -117,13 +118,12 @@ function App() {
         } />
 
         <Route element={<PrivateRoute><Dashboard /></PrivateRoute>} >
-
           <Route path='dashboard/my-profile' element={<MyProfile />}></Route>
-          {/* <Route path='dashboard/settings' element={<Settings />}></Route>*/}
+          <Route path='dashboard/settings' element={<Settings />}></Route>
           {
             user?.accountType === ACCOUNT_TYPE.STUDENT && (
               <>
-                {/* <Route path='dashboard/cart' element={<Cart />}></Route> */}
+                <Route path='dashboard/cart' element={<Cart />}></Route>
                 <Route path='dashboard/enrolled-courses' element={<EnrolledCourses />}></Route>
               </>
             )

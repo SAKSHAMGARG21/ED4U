@@ -18,11 +18,9 @@ const Navbar = () => {
     // console.log("Printing base url: ",process.env.REACT_APP_BASE_URL);
 
     const { token } = useSelector((state) => state.auth);
-    // console.log("token in Navbar is", token)
     const { user } = useSelector((state) => state.profile);
-    // console.log("User in Navbar is", user)
-    // const { cart } = useSelector((state) => state.cart);
-    // const { totalItems } = useSelector((state) => state.cart);
+    const { cart } = useSelector((state) => state.cart);
+    const { totalItems } = useSelector((state) => state.cart);
     const location = useLocation();
 
     const [subLinks, setSubLinks] = useState([]);
@@ -117,11 +115,11 @@ const Navbar = () => {
                             <Link to="/dashboard/cart" className='relative pr-2'>
                                 <AiOutlineShoppingCart className='text-2xl text-richblack-100 ' />
                                 {
-                                    // totalItems > 0 && (
-                                    <span className=' absolute -bottom-2 -right-0 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-richblack-600 text-center text-xs font-bold text-yellow-100'>
-                                        {/* {totalItems} */}
-                                    </span>
-                                    // )
+                                    totalItems > 0 && (
+                                        <span className=' absolute -bottom-2 -right-0 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-richblack-600 text-center text-xs font-bold text-yellow-100'>
+                                            {totalItems}
+                                        </span>
+                                    )
                                 }
                             </Link>
                         )
@@ -146,7 +144,6 @@ const Navbar = () => {
                     }
                     {
                         token !== null && <ProfileDropDown />
-                        // <ProfileDropDown />
                     }
                 </div>
 
