@@ -138,7 +138,7 @@ function CourseDetails() {
                             </div>
 
                             <div>
-                                <p>Created By {`${instructor.fullName}`}</p>
+                                <p>Created By {`${instructor?.fullName}`}</p>
                             </div>
 
                             <div className='flex flex-wrap gap-5 text-lg'>
@@ -256,11 +256,11 @@ function CourseDetails() {
                         <div className='mb-12 py-4'>
                             <p className="text-[28px] font-semibold">Author</p>
                             <div className=' flex items-center gap-4 py-4'>
-                                <img className='h-14 w-14 rounded-full object-cover' src={instructor.avtar} />
-                                <p className='text-lg'>{instructor.fullName}  </p>
+                                <img className='h-14 w-14 rounded-full object-cover' src={instructor?.avtar} />
+                                <p className='text-lg'>{instructor?.fullName}  </p>
                             </div>
                             <p className='text-lg'>
-                                {instructor.additionalDetails.about}
+                                {instructor?.additionalDetails.about}
                             </p>
                         </div>
                     </div>

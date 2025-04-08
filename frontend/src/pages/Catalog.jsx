@@ -134,7 +134,7 @@ const Catalog = () => {
                             <div className=" mx-auto box-content w-full max-w-maxContentTab px-4 py-12 lg:max-w-maxContent">
                                 {
                                     catalogPageData?.differentCourses.map((ct) => (
-                                        <>
+                                        <div key={ct._id}>
                                             <div className="section_heading">
                                                 Checkout {ct.name} Courses Also
                                             </div>
@@ -143,7 +143,7 @@ const Catalog = () => {
                                                     Courses={ct.courses}
                                                 />
                                             </div>
-                                        </>
+                                        </div>
                                     ))
                                 }
                             </div>

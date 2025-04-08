@@ -30,6 +30,7 @@ import EnrolledCourses from './components/Core/Dashboard/EnrolledCourses.jsx';
 import ViewCourse from './pages/ViewCourse.jsx';
 import VideoDetails from './components/Core/ViewCourse/VideoDetails.jsx';
 import toast from 'react-hot-toast';
+import Settings from "./components/Core/Dashboard/Settings"
 
 
 function App() {

@@ -33,9 +33,8 @@ export const signUp = (userName, fullName, email, password, accountType, otp, na
         dispatch(setLoding(true));
 
         try {
-            console.log(userName, fullName, email, password, accountType, otp);
             const response = await apiConnector("POST", endpoints.SIGNUP_API, { userName, fullName, email, password, accountType, otp });
-            console.log(response);
+            // console.log(response);
             if (!response.data.success) {
                 toast.error("Failed to signup");
             }

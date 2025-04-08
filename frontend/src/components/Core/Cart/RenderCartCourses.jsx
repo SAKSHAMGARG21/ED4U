@@ -8,6 +8,7 @@ import GetAvgRating from '../../../utils/avgRating';
 import { FaStar } from "react-icons/fa"
 function RenderCartCourses() {
     const { cart } = useSelector((state) => state.cart);
+    const dispatch= useDispatch();
     const getRating = (course) => {
         const count = GetAvgRating(course?.courseDetails.ratingAndReviews);
         return count;

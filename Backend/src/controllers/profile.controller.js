@@ -4,6 +4,7 @@ import { User } from "../modules/user.models.js";
 import { ApiError } from "../utils/ApiErrors.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { convertSecondsToDuration } from "../utils/secToDuration.js";
 
 const updateProfile = asyncHandler(async (req, res) => {
@@ -131,6 +132,28 @@ const getenrolledUserCourses = asyncHandler(async (req, res) => {
 
 })
 const updateDisplayPicture = asyncHandler(async (req, res) => {
+    const displayPicture = req.file?.path;
+    const userId = req.user._id;
+    
+    if (!displayPicture){
+        throw new ApiError(404,"Field is required");
+    }
+    
+    const img = await uploadOnCloudinary(displayPicture, process.env.CLOUDINARY_FOLDER_NAME);
+
+    if (!img) {
+        throw new ApiError(404, "Error in uploading Changned profile photo on cloudinary");
+    }
+
+    const newuser = await User.findByIdAndUpdate(userId, { avtar: img.secure_url }, { new: true });
+
+    if (!newuser) {
+        throw new ApiError(404, "Error in Changing profile photo for user");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, newuser, "Profile Photo Updated Successfully")
+    )
 
 })
 const instructorDashboard = asyncHandler(async (req, res) => {
