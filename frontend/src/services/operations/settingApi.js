@@ -31,16 +31,17 @@ export const updateDisplayPicture = (token,data) => {
         dispatch(setLoading(false));
     }
 }
-export const updateProfile = () => {
+export const updateProfile = (data , token) => {
     return async (dispatch) => {
         const toastId = toast.loading("Loading...");
-        dispatch(setLoading(true));
         try {
+            const res= await apiConnector("PUT",UPDATE_PROFILE_API,data,token);
+            console.log(res);
+            toast.success(res.data.message);
 
         } catch (error) {
-            dispatch(logout(navigate));
-            console.log("", error);
-            toast.error("");
+            console.log("Api Error in updating profile...", error);
+            toast.error("Could not upadate Profile");
         }
 
         toast.dismiss((toastId));

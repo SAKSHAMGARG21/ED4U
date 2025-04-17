@@ -153,8 +153,9 @@ const sendPaymentSuccessEmail = asyncHandler(async (req, res) => {
     }
 
     const user = await User.findOne({ _id: userId });
-    const emailRes = await mailSender(user.email, "Payment Recived",
-        paymentSuccessEmail(user.fullName, amount / 100, orderId, paymentId));
+    const emailRes = await mailSender(user.email,"Payment Recived",
+        paymentSuccessEmail(user.fullName, amount / 100, orderId, paymentId)
+    );
 
     if (!emailRes) {
         throw new ApiError(404, "Error in sending payment Successfully Email");
