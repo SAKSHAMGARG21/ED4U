@@ -256,27 +256,18 @@ const loginUser = asyncHandler(async (req, res) => {
     // Validating user input, finding the user in the database, checking the password,
     // generating access and refresh tokens, and returning a success response with the logged-in user details and tokens
 
-    // req -> data form body
-    // username or email
-    // find the user
-    // check password
-    // access or refresh token
-    // send cookies
-
     const { email, password } = req.body;
 
     let userName;
     if (!email.includes("@gmail.com")){
         userName=email;
     }
-    // console.log(userName);
 
     if (!(userName || email)) {
         throw new ApiError(400, "username or email is required");
     }
 
     const user = await User.findOne({ $or: [{ userName }, { email }] });
-    // console.log(user);
     if (!user) {
         throw new ApiError(404, "User does not exist");
     }
@@ -466,7 +457,6 @@ const resetPasswordSendMail = asyncHandler(async (req, res) => {
     return res.status(200).json(
         new ApiResponse(200, resetPasslink, "Email send successfully")
     )
-
 })
 
 const resetPassword = asyncHandler(async (req, res) => {
